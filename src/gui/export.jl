@@ -1,7 +1,7 @@
 
 function add_export_callbacks(b::Gtk.GtkBuilder,handles::Tracker_Handles)
 
-    signal_connect(export_button_cb,b["export_button"],"clicked",Void,(),false,(handles,))
+    signal_connect(export_button_cb,b["export_button"],"clicked",Nothing,(),false,(handles,))
 
     nothing
 end
@@ -10,17 +10,17 @@ function export_button_cb(w::Ptr,user_data::Tuple{Tracker_Handles})
 
     han, = user_data
 
-    setproperty!(han.b["export_button"],:label,"Exporting to MAT file...")
+    set_gtk_property!(han.b["export_button"],:label,"Exporting to MAT file...")
 
-    e_angle = getproperty(han.b["angle_export_button"],:active,Bool)
-    e_curve = getproperty(han.b["curvature_export_button"],:active,Bool)
-    e_phase = getproperty(han.b["phase_export"],:active,Bool)
-    e_whisker = getproperty(han.b["whisker_export"],:active,Bool)
+    e_angle = get_gtk_property(han.b["angle_export_button"],:active,Bool)
+    e_curve = get_gtk_property(han.b["curvature_export_button"],:active,Bool)
+    e_phase = get_gtk_property(han.b["phase_export"],:active,Bool)
+    e_whisker = get_gtk_property(han.b["whisker_export"],:active,Bool)
 
     #Convert to Janelia
     (my_whiskers,mytracked)=convert_discrete_to_janelia(han.nn.predicted,han.nn.confidence_thres,han.wt.pad_pos);
 
-    face_axis_num=getproperty(han.b["face_axis_combo"],:active,Int64)
+    face_axis_num=get_gtk_property(han.b["face_axis_combo"],:active,Int64)
 
     if face_axis_num == 0
         (mycurv,myangles)=get_curv_and_angle(my_whiskers,mytracked,han.wt.pad_pos);
@@ -50,7 +50,7 @@ function export_button_cb(w::Ptr,user_data::Tuple{Tracker_Handles})
     write(file,"Tracked",mytracked)
     close(file)
 
-    setproperty!(han.b["export_button"],:label,"Export")
+    set_gtk_property!(han.b["export_button"],:label,"Export")
     println("Export complete")
 
     nothing

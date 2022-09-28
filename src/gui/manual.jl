@@ -1,23 +1,23 @@
 
 function add_contact_mark_callbacks(b,handles)
 
-    signal_connect(contact_onset_cb,b["contact_block_button"],"toggled",Void,(),false,(handles,))
-    signal_connect(no_contact_cb,b["no_contact_block_button"],"toggled",Void,(),false,(handles,))
+    signal_connect(contact_onset_cb,b["contact_block_button"],"toggled",Nothing,(),false,(handles,))
+    signal_connect(no_contact_cb,b["no_contact_block_button"],"toggled",Nothing,(),false,(handles,))
 
-    signal_connect(contact_select_cb,b["contact_spin"],"value-changed",Void,(),false,(handles,))
+    signal_connect(contact_select_cb,b["contact_spin"],"value-changed",Nothing,(),false,(handles,))
 
-    signal_connect(pro_re_cb,b["protraction_button"],"clicked",Void,(),false,(handles,1))
-    signal_connect(pro_re_cb,b["retraction_button"],"clicked",Void,(),false,(handles,2))
+    signal_connect(pro_re_cb,b["protraction_button"],"clicked",Nothing,(),false,(handles,1))
+    signal_connect(pro_re_cb,b["retraction_button"],"clicked",Nothing,(),false,(handles,2))
 
-    signal_connect(exclude_cb,b["exclude_button"],"toggled",Void,(),false,(handles,))
+    signal_connect(exclude_cb,b["exclude_button"],"toggled",Nothing,(),false,(handles,))
 
-    signal_connect(advance_slider_cb,b["contact_win"],"key-press-event",Void,(Ptr{Gtk.GdkEventKey},),false,(handles,))
+    signal_connect(advance_slider_cb,b["contact_win"],"key-press-event",Nothing,(Ptr{Gtk.GdkEventKey},),false,(handles,))
 
-    signal_connect(contact_angle_cb,b["contact_angle_toggle"],"toggled",Void,(),false,(handles,))
-    signal_connect(contact_location_cb,b["contact_location_toggle"],"toggled",Void,(),false,(handles,))
-    signal_connect(tracked_whisker_cb,b["tracked_whisker_toggle"],"toggled",Void,(),false,(handles,))
-    signal_connect(follicle_location_cb,b["follicle_location_toggle"],"toggled",Void,(),false,(handles,))
-    signal_connect(follicle_angle_cb,b["follicle_angle_button"],"toggled",Void,(),false,(handles,))
+    signal_connect(contact_angle_cb,b["contact_angle_toggle"],"toggled",Nothing,(),false,(handles,))
+    signal_connect(contact_location_cb,b["contact_location_toggle"],"toggled",Nothing,(),false,(handles,))
+    signal_connect(tracked_whisker_cb,b["tracked_whisker_toggle"],"toggled",Nothing,(),false,(handles,))
+    signal_connect(follicle_location_cb,b["follicle_location_toggle"],"toggled",Nothing,(),false,(handles,))
+    signal_connect(follicle_angle_cb,b["follicle_angle_button"],"toggled",Nothing,(),false,(handles,))
 
     nothing
 end

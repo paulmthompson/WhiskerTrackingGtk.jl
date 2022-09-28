@@ -1,20 +1,20 @@
 
 function add_deeplearning_callbacks(b::Gtk.GtkBuilder,handles::Tracker_Handles)
 
-    signal_connect(load_weights_cb,b["dl_load_weights"],"clicked",Void,(),false,(handles,))
-    signal_connect(load_labels_cb,b["dl_load_labels"],"clicked",Void,(),false,(handles,))
-    signal_connect(dl_save_weights_cb,b["dl_save_weights"],"clicked",Void,(),false,(handles,))
-    signal_connect(dl_save_labels_cb,b["dl_save_labels"],"clicked",Void,(),false,(handles,))
+    signal_connect(load_weights_cb,b["dl_load_weights"],"clicked",Nothing,(),false,(handles,))
+    signal_connect(load_labels_cb,b["dl_load_labels"],"clicked",Nothing,(),false,(handles,))
+    signal_connect(dl_save_weights_cb,b["dl_save_weights"],"clicked",Nothing,(),false,(handles,))
+    signal_connect(dl_save_labels_cb,b["dl_save_labels"],"clicked",Nothing,(),false,(handles,))
 
-    signal_connect(create_training_cb,b["dl_create_model_button"],"clicked",Void,(),false,(handles,))
+    signal_connect(create_training_cb,b["dl_create_model_button"],"clicked",Nothing,(),false,(handles,))
 
-    signal_connect(training_button_cb,b["dl_train_button"],"clicked",Void,(),false,(handles,))
-    signal_connect(epochs_sb_cb,b["dl_epoch_button"],"value-changed",Void,(),false,(handles,))
-    signal_connect(confidence_sb_cb,b["dl_confidence_sb"],"value-changed",Void,(),false,(handles,))
+    signal_connect(training_button_cb,b["dl_train_button"],"clicked",Nothing,(),false,(handles,))
+    signal_connect(epochs_sb_cb,b["dl_epoch_button"],"value-changed",Nothing,(),false,(handles,))
+    signal_connect(confidence_sb_cb,b["dl_confidence_sb"],"value-changed",Nothing,(),false,(handles,))
 
-    signal_connect(predict_frames_cb,b["dl_predict_button"],"clicked",Void,(),false,(handles,))
+    signal_connect(predict_frames_cb,b["dl_predict_button"],"clicked",Nothing,(),false,(handles,))
 
-    signal_connect(create_config_cb,b["dl_export_training"],"clicked",Void,(),false,(handles,true))
+    signal_connect(create_config_cb,b["dl_export_training"],"clicked",Nothing,(),false,(handles,true))
 
     nothing
 end
@@ -29,7 +29,7 @@ function load_weights_cb(w::Ptr,user_data::Tuple{Tracker_Handles})
 
         try
             load_hourglass_to_nn(han.nn,config_path)
-            setproperty!(han.b["dl_weights_label"],:label,config_path)
+            set_gtk_property!(han.b["dl_weights_label"],:label,config_path)
         catch
             println("Could not load weights")
         end
@@ -48,7 +48,7 @@ function load_labels_cb(w::Ptr,user_data::Tuple{Tracker_Handles})
 
         try
             load_training(han,config_path)
-            setproperty!(han.b["dl_labels_label"],:label,config_path)
+            set_gtk_property!(han.b["dl_labels_label"],:label,config_path)
             han.nn.use_existing_labels = true
         catch
             println("Could not load labeled data")
@@ -131,7 +131,7 @@ function epochs_sb_cb(w::Ptr,user_data::Tuple{Tracker_Handles})
 
     han, = user_data
 
-    han.nn.epochs=getproperty(han.b["dl_epochs_adjustment"],:value,Int)
+    han.nn.epochs=get_gtk_property(han.b["dl_epochs_adjustment"],:value,Int)
 
     nothing
 end
@@ -140,7 +140,7 @@ function confidence_sb_cb(w::Ptr,user_data::Tuple{Tracker_Handles})
 
     han, = user_data
 
-    han.nn.confidence_thres=getproperty(han.b["dl_confidence_adjustment"],:value,Float64)
+    han.nn.confidence_thres=get_gtk_property(han.b["dl_confidence_adjustment"],:value,Float64)
 
     nothing
 end

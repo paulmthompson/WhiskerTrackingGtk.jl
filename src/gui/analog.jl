@@ -2,16 +2,16 @@
 function make_analog_gui(b::Gtk.GtkBuilder,handles::Tracker_Handles)
 
     push!(b["analog_c_box"],handles.analog.c)
-    setproperty!(handles.analog.c,:hexpand,true)
-    setproperty!(handles.analog.c,:vexpand,true)
+    set_gtk_property!(handles.analog.c,:hexpand,true)
+    set_gtk_property!(handles.analog.c,:vexpand,true)
     show(handles.analog.c)
 
 end
 
 function add_analog_callbacks(b::Gtk.GtkBuilder,handles::Tracker_Handles)
 
-    signal_connect(analog_time_cb,b["analog_x_zoom_minus"],"clicked",Void,(),false,(handles,0))
-    signal_connect(analog_time_cb,b["analog_x_zoom_plus"],"clicked",Void,(),false,(handles,1))
+    signal_connect(analog_time_cb,b["analog_x_zoom_minus"],"clicked",Nothing,(),false,(handles,0))
+    signal_connect(analog_time_cb,b["analog_x_zoom_plus"],"clicked",Nothing,(),false,(handles,1))
 
     nothing
 end

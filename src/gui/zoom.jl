@@ -2,15 +2,15 @@
 function make_zoom_gui(b::Gtk.GtkBuilder,handles::Tracker_Handles)
 
     b["zoom_grid"][2,1] = handles.zoom.c
-    setproperty!(handles.zoom.c,:hexpand,true)
-    setproperty!(handles.zoom.c,:vexpand,true)
+    set_gtk_property!(handles.zoom.c,:hexpand,true)
+    set_gtk_property!(handles.zoom.c,:vexpand,true)
     show(handles.zoom.c)
 
 end
 
 function add_zoom_callbacks(b::Gtk.GtkBuilder,handles::Tracker_Handles)
 
-    signal_connect(zoom_select_cb,b["select_zoom_button"],"toggled",Void,(),false,(handles,))
+    signal_connect(zoom_select_cb,b["select_zoom_button"],"toggled",Nothing,(),false,(handles,))
 
     nothing
 end

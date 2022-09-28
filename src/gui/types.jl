@@ -75,7 +75,7 @@ function Save_Paths(mypath,make_dirs=true)
         mkdir(mypath)
     end
 
-    if is_windows()
+    if Sys.iswindows()
         out=Save_Paths(mypath,string(mypath,"\\temp"),string(mypath,"\\images"),string(mypath,"\\backup"),string(mypath,"\\DLC"))
     else
         out=Save_Paths(mypath,string(mypath,"/temp"),string(mypath,"/images"),string(mypath,"/backup"),string(mypath,"/DLC"))

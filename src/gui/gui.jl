@@ -709,10 +709,10 @@ function advance_slider_cb(w::Ptr,param_tuple,user_data::Tuple{Tracker_Handles})
     event = unsafe_load(param_tuple)
 
     if event.keyval == 0xff53 #Right arrow
-        setproperty!(han.b["adj_frame"],:value,han.requested_frame + han.speed) #This will call the slider callback
+        set_gtk_property!(han.b["adj_frame"],:value,han.requested_frame + han.speed) #This will call the slider callback
         #han.displayed_frame += 1
     elseif event.keyval == 0xff51 #Left arrow
-        setproperty!(han.b["adj_frame"],:value,han.requested_frame - han.speed)
+        set_gtk_property!(han.b["adj_frame"],:value,han.requested_frame - han.speed)
         #han.displayed_frame -= 1
     elseif event.keyval == 0xFFE9 #Left alt
         take_snapshot(han)
@@ -741,9 +741,9 @@ function advance_slider_cb_mouse(w::Ptr,param_tuple,user_data::Tuple{Tracker_Han
     event = unsafe_load(param_tuple)
 
     if event.direction == Gtk.GdkScrollDirection.UP
-        setproperty!(han.b["adj_frame"],:value,han.requested_frame + han.speed)
+        set_gtk_property!(han.b["adj_frame"],:value,han.requested_frame + han.speed)
     elseif event.direction == Gtk.GdkScrollDirection.DOWN
-        setproperty!(han.b["adj_frame"],:value,han.requested_frame - han.speed)
+        set_gtk_property!(han.b["adj_frame"],:value,han.requested_frame - han.speed)
     end
 
     nothing

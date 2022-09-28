@@ -43,13 +43,13 @@ function _make_contact_gui()
     classifier_grid[1,2]=fit_button
 
     n_estimators_button = SpinButton(1:1000)
-    setproperty!(n_estimators_button,:value,100)
+    set_gtk_property!(n_estimators_button,:value,100)
     classifier_grid[2,2] = n_estimators_button
 
     classifier_grid[3,2] = Label("Number of Estimators")
 
     forest_depth_button = SpinButton(1:100)
-    setproperty!(forest_depth_button,:value,10)
+    set_gtk_property!(forest_depth_button,:value,10)
     classifier_grid[4,2] = forest_depth_button
 
     classifier_grid[5,2] = Label("Forest Depth")
@@ -70,8 +70,8 @@ end
 
 function add_contact_callbacks(w,handles)
 
-    signal_connect(contact_fit_cb,w.fit_button,"clicked",Void,(),false,(handles,))
-    signal_connect(contact_load_predicted_cb,w.load_predicted_button,"clicked",Void,(),false,(handles,))
+    signal_connect(contact_fit_cb,w.fit_button,"clicked",Nothing,(),false,(handles,))
+    signal_connect(contact_load_predicted_cb,w.load_predicted_button,"clicked",Nothing,(),false,(handles,))
 
     nothing
 end
@@ -83,15 +83,15 @@ function contact_fit_cb(w::Ptr,user_data::Tuple{Tracker_Handles})
     #han.class.clf=RandomForestClassifier(n_estimators=han.class.n_estimators,max_depth=han.class.forest_depth,random_state=0)
 
     #Select which variables to use
-    if getproperty(han.c_widgets.pred_pole_button,:active,Bool)
+    if get_gtk_property(han.c_widgets.pred_pole_button,:active,Bool)
 
     end
 
-    if getproperty(han.c_widgets.pred_pole_position,:active,Bool)
+    if get_gtk_property(han.c_widgets.pred_pole_position,:active,Bool)
 
     end
 
-    if getproperty(han.c_widgets.pred_curv,:active,Bool)
+    if get_gtk_property(han.c_widgets.pred_curv,:active,Bool)
 
     end
 
@@ -104,7 +104,7 @@ function contact_fit_cb(w::Ptr,user_data::Tuple{Tracker_Handles})
     #Cross validation
     #cross_val_rf=mean(cross_val_score(han.class.clf, han.class.predictors, han.tracked_contact, cv=10))
 
-    #setproperty!(han.c_widgets.cv_label,:label,han.class.cv)
+    #set_gtk_property!(han.c_widgets.cv_label,:label,han.class.cv)
 
     nothing
 end
@@ -113,8 +113,8 @@ end
 
 #Predict Function
 
-contact_estimators(han)=getproperty(han.c_widgets.n_estimators_button,:value,Int64)
-contact_depth(han)=getproperty(han.c_widgets.forest_depth_button,:value,Int64)
+contact_estimators(han)=get_gtk_property(han.c_widgets.n_estimators_button,:value,Int64)
+contact_depth(han)=get_gtk_property(han.c_widgets.forest_depth_button,:value,Int64)
 
 function contact_load_predicted_cb(w::Ptr,user_data::Tuple{Tracker_Handles})
 

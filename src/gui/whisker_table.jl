@@ -2,7 +2,7 @@
 
 function add_table_callbacks(b::Gtk.GtkBuilder,handles::Tracker_Handles)
 
-    signal_connect(select_row_cb,b["frame_tree_view"],"row-activated",Void,(Ptr{TreePath},Ptr{TreeViewColumn}),false,(handles,))
+    signal_connect(select_row_cb,b["frame_tree_view"],"row-activated",Nothing,(Ptr{TreePath},Ptr{TreeViewColumn}),false,(handles,))
 
     nothing
 end

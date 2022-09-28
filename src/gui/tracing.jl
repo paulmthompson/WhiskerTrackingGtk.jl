@@ -1,7 +1,7 @@
 
 function add_tracing_callbacks(b::Gtk.GtkBuilder,handles::Tracker_Handles)
 
-    signal_connect(combine_cb,b["tracing_combine_button"],"clicked",Void,(),false,(handles,))
+    signal_connect(combine_cb,b["tracing_combine_button"],"clicked",Nothing,(),false,(handles,))
 
     nothing
 end
@@ -10,7 +10,7 @@ function combine_cb(w::Ptr,user_data::Tuple{Tracker_Handles})
 
     han, = user_data
 
-    han.combine_mode = getproperty(han.b["tracing_combine_button"],:active,Bool)
+    han.combine_mode = get_gtk_property(han.b["tracing_combine_button"],:active,Bool)
 
     nothing
 end

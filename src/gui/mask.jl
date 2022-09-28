@@ -22,8 +22,8 @@ function mask_min_cb(w::Ptr, user_data::Tuple{Tracker_Handles})
 
     han, = user_data
 
-    mymin=getproperty(han.b["mask_min_button"],:value,Int)
-    mymax=getproperty(han.b["mask_max_button"],:value,Int)
+    mymin=get_gtk_property(han.b["mask_min_button"],:value,Int)
+    mymax=get_gtk_property(han.b["mask_max_button"],:value,Int)
 
     generate_mask(han.wt,han.current_frame2,mymin,mymax)
 
@@ -37,8 +37,8 @@ function mask_max_cb(w::Ptr, user_data::Tuple{Tracker_Handles})
 
     han, = user_data
 
-    mymin=getproperty(han.b["mask_min_button"],:value,Int)
-    mymax=getproperty(han.b["mask_max_button"],:value,Int)
+    mymin=get_gtk_property(han.b["mask_min_button"],:value,Int)
+    mymax=get_gtk_property(han.b["mask_max_button"],:value,Int)
 
     redraw_all(han)
     generate_mask(han.wt,han.current_frame2,mymin,mymax)

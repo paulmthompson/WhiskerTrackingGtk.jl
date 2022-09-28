@@ -1,12 +1,12 @@
 
 function add_image_callbacks(b::Gtk.GtkBuilder,handles::Tracker_Handles)
 
-    signal_connect(adjust_contrast_cb,b["contrast_min_slider"],"value-changed",Void,(),false,(handles,))
-    signal_connect(adjust_contrast_cb,b["contrast_max_slider"],"value-changed",Void,(),false,(handles,))
+    signal_connect(adjust_contrast_cb,b["contrast_min_slider"],"value-changed",Nothing,(),false,(handles,))
+    signal_connect(adjust_contrast_cb,b["contrast_max_slider"],"value-changed",Nothing,(),false,(handles,))
 
-    signal_connect(sharpen_cb,b["sharpen_window"],"value-changed",Void,(),false,(handles,))
-    signal_connect(sharpen_cb,b["sharpen_reps"],"value-changed",Void,(),false,(handles,))
-    signal_connect(sharpen_cb,b["sharpening_filter_type"],"changed",Void,(),false,(handles,))
+    signal_connect(sharpen_cb,b["sharpen_window"],"value-changed",Nothing,(),false,(handles,))
+    signal_connect(sharpen_cb,b["sharpen_reps"],"value-changed",Nothing,(),false,(handles,))
+    signal_connect(sharpen_cb,b["sharpening_filter_type"],"changed",Nothing,(),false,(handles,))
 
     nothing
 end
@@ -47,9 +47,9 @@ function sharpen_cb(w::Ptr,user_data::Tuple{Tracker_Handles})
     nothing
 end
 
-sharpen_mode(b::Gtk.GtkBuilder)=getproperty(b["sharpen_image_button"],:active,Bool)
-anisotropic_mode(b::Gtk.GtkBuilder)=getproperty(b["aniso_button"],:active,Bool)
-local_contrast_mode(b::Gtk.GtkBuilder)=getproperty(b["local_contrast_enhance"],:active,Bool)
+sharpen_mode(b::Gtk.GtkBuilder)=get_gtk_property(b["sharpen_image_button"],:active,Bool)
+anisotropic_mode(b::Gtk.GtkBuilder)=get_gtk_property(b["aniso_button"],:active,Bool)
+local_contrast_mode(b::Gtk.GtkBuilder)=get_gtk_property(b["local_contrast_enhance"],:active,Bool)
 
 function subtract_background(han::Tracker_Handles)
 
