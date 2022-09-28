@@ -2,15 +2,7 @@
 module WhiskerTrackingGtk
 
 #Standard Library
-#using Statistics,Random,Distributed,SharedArrays,DelimitedFiles,LinearAlgebra, Libdl, Dates
-
-#Deep Learning Libraries
-#using CuArrays, CuArrays.CUFFT, CUDAnative, Knet
-#using CUDA, Knet
-
-#using Images, ImageFiltering, MAT, JLD2, Interpolations, DSP,
-#FFTW, IterTools, FFMPEG, StackedHourglass, Polynomials, StatsBase
-
+using Statistics,Random,Distributed,SharedArrays,DelimitedFiles,LinearAlgebra, Libdl, Dates
 
 using WhiskerTracking
 using Gtk.ShortNames, Cairo, FFMPEG, StackedHourglass

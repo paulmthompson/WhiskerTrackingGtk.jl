@@ -178,7 +178,7 @@ function get_vid_dims(vid_name::String)
     width=0
     height=0
     fps=0
-    if is_windows()
+    if Sys.iswindows()
         width=parse(Int64,String(ww[1:(end-2)]))
         height=parse(Int64,String(hh[1:(end-2)]))
         fps=myparse(String(ff[1:(end-2)]))
@@ -268,7 +268,7 @@ end
 function get_max_frames(vid_name::String)
 
     yy=@ffmpeg_env read(`$(FFMPEG.ffprobe) -v error -select_streams v:0 -show_entries stream=nb_frames -of default=nokey=1:noprint_wrappers=1 $(vid_name)`)
-    if is_windows()
+    if Sys.iswindows()
         max_frames=parse(Int64,String(yy[1:(end-2)]))
     else
         max_frames=parse(Int64,String(yy[1:(end-1)]))
@@ -760,9 +760,9 @@ function plot_image(han::Tracker_Handles,img::AbstractArray{UInt8,2})
     w,h = size(img)
     han.draw_area.img2[:] = img
     if sharpen_mode(han.b)
-        han.draw_area.img2 = sharpen_image(han.draw_area.img2,han.im_adj.sharpen_win,han.im_adj.sharpen_reps,han.im_adj.sharpen_filter)
+        han.draw_area.img2 = WhiskerTracking.sharpen_image(han.draw_area.img2,han.im_adj.sharpen_win,han.im_adj.sharpen_reps,han.im_adj.sharpen_filter)
     end
-    adjust_contrast(han.draw_area.img2,han.im_adj.contrast_min,han.im_adj.contrast_max)
+    WhiskerTracking.adjust_contrast(han.draw_area.img2,han.im_adj.contrast_min,han.im_adj.contrast_max)
 
     for i=1:length(han.draw_area.img2)
         han.draw_area.surface.data[i] = (convert(UInt32,han.draw_area.img2[i]) << 16) | (convert(UInt32,han.draw_area.img2[i]) << 8) | han.draw_area.img2[i]
@@ -780,7 +780,7 @@ function plot_image(han::Tracker_Handles,img::AbstractArray{UInt8,2})
     draw_event(han)
 
     #If this frame is in the frame list, draw a box around the display
-    if !isempty(find(han.frame_list.==han.displayed_frame))
+    if !isempty(findall(han.frame_list.==han.displayed_frame))
         set_source_rgb(ctx,0,1,0)
         rectangle(ctx, 0, 0, w, h)
         stroke(ctx)
