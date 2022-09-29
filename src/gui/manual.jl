@@ -278,49 +278,12 @@ function calc_contact_block(han::Tracker_Handles)
             end
         end
 
-        (c_on,c_off) = get_contact_indexes(contact,han.man.exclude_block)
+        (c_on,c_off) = WhiskerTracking.get_contact_indexes(contact,han.man.exclude_block)
         han.man.calc_contact_block = [(c_on[i],c_off[i]) for i=1:length(c_on)]
 
         set_gtk_property!(han.b["contact_number_label"],:label,string(length(c_on)))
         set_gtk_property!(han.b["contact_spin_adj"],:upper,length(c_on))
     end
-end
-
-function get_contact_indexes(c,exclude,c_dur_min = 4)
-
-    c_ind=Array{Int64,1}()
-    c_off=Array{Int64,1}()
-
-    i=1
-    while (i < length(c) - c_dur_min)
-
-        if exclude[i] != true
-            if ((c[i] - c[i+1])==-1)
-                push!(c_ind,i)
-                myoff=findnext(c.==false,i+1)
-                if typeof(myoff) == Nothing #single frame contact
-                    myoff = i+1
-                end
-
-                push!(c_off,myoff)
-
-                i=myoff + 1
-            else
-                i+=1
-            end
-        else
-            i+= 1
-        end
-    end
-
-    keep=trues(length(c_ind))
-    for i=1:length(c_ind)
-        if (c_off[i] - c_ind[i]) < c_dur_min
-            keep[i] = false
-        end
-    end
-
-    (c_ind[keep], c_off[keep])
 end
 
 function contact_angle_cb(w::Ptr,user_data::Tuple{Tracker_Handles})
