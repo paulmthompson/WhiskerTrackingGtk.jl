@@ -1060,10 +1060,10 @@ function draw_tracked_whisker(han::Tracker_Handles)
         ip1 = han.tracked_w.ip_1[han.displayed_frame]
         ip2 = han.tracked_w.ip_2[han.displayed_frame]
 
-        ip_1=get_ind_at_dist(w_x,w_y,ip1)
-        ip_2=get_ind_at_dist(w_x,w_y,ip2)
+        ip_1 = WhiskerTracking.get_ind_at_dist(w_x,w_y,ip1)
+        ip_2 = WhiskerTracking.get_ind_at_dist(w_x,w_y,ip2)
 
-        (x2,y2) = get_parabola_fit(w_x,w_y,han.tracked_w.parabola_coeffs[:,han.displayed_frame],han.tracked_w.parabola_angle[han.displayed_frame])
+        (x2,y2) = WhiskerTracking.get_parabola_fit(w_x,w_y,han.tracked_w.parabola_coeffs[:,han.displayed_frame],han.tracked_w.parabola_angle[han.displayed_frame])
 
         set_source_rgba(ctx,58/255,235/255,52/255,0.9)
         set_line_width(ctx,0.5)

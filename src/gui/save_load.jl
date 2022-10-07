@@ -82,16 +82,25 @@ function create_label_image(han::Tracker_Handles,rad=0,interp=false)
     create_label_image(img,w1,rad,interp)
 end
 
-function load_whisker_into_gui(han,path)
+function load_whisker_into_gui(han,path;
+    flip_y = false,flip_x=false)
 
-    tracked = load_whisker(path)
+    tracked = WhiskerTracking.load_whisker(path)
 
-    han.tracked_w=Tracked_Whisker(han.max_frames)
+    han.tracked_w = WhiskerTracking.Tracked_Whisker(han.max_frames)
 
     for key in keys(tracked)
         if key != 0
-            han.tracked_w.whiskers_x[key] = tracked[key][1]
-            han.tracked_w.whiskers_y[key] = tracked[key][2]
+            if flip_x
+                han.tracked_w.whiskers_x[key] = han.w .- tracked[key][1]
+            else
+                han.tracked_w.whiskers_x[key] = tracked[key][1]
+            end
+            if flip_y
+                han.tracked_w.whiskers_y[key] = han.h .- tracked[key][2]
+            else
+                han.tracked_w.whiskers_y[key] = tracked[key][2]
+            end
             han.tracked_w.whiskers_l[key] = tracked[key][3]
         end
     end
