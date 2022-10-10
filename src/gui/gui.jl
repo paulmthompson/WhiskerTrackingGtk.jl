@@ -1050,7 +1050,7 @@ function draw_tracked_whisker(han::Tracker_Handles)
 
     #Mask whisker
     #mask index specifies where the whisker is clipped by the mask
-    mask_index = WhiskerTracking.mask_tracked_whisker(w_x,w_y,han.wt)
+    (mask_index,x_f,y_f,x_m,y_m) = WhiskerTracking.mask_tracked_whisker(w_x,w_y,han.wt)
 
     if length(w_x) > 0
 
@@ -1060,17 +1060,15 @@ function draw_tracked_whisker(han::Tracker_Handles)
 
         set_source_rgba(ctx,58/255,235/255,52/255,0.9)
         set_line_width(ctx,0.5)
-        move_to(ctx,w_x[1],w_y[1])
-        for i=2:mask_index
-            line_to(ctx,w_x[i],w_y[i])
-        end
+        move_to(ctx,x_f,y_f)
+        line_to(ctx,x_m,y_m)
         stroke(ctx)
 
         set_source_rgba(ctx,235/255,52/255,192/255,0.9)
         set_line_width(ctx,0.5)
         #Unmasked portion second
-        move_to(ctx,w_x[mask_index],w_y[mask_index])
-        for i=(mask_index+1):length(w_x)
+        move_to(ctx,x_m,y_m)
+        for i=(mask_index):length(w_x)
             line_to(ctx,w_x[i],w_y[i])
         end
         stroke(ctx)
