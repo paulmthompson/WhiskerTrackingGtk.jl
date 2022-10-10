@@ -26,7 +26,7 @@ function make_gui()
 
     all_whiskers=[Array{Whisker1,1}() for i=1:1]
 
-    wt=Tracker("","","","","",50,falses(h,w),Array{Whisker1,1}(),
+    wt=Tracker("","","","","",50,falses(h,w),falses(h,w),Array{Whisker1,1}(),
     (0.0,0.0),h,w,all_whiskers)
 
     woi_array = Dict{Int64,WhiskerTracking.Whisker1}()
@@ -245,7 +245,7 @@ function load_video_to_gui(path::String,vid_title::String,handles::Tracker_Handl
 
     tracker_name = (vid_name)[1:(end-4)]
 
-    handles.wt=Tracker(path,"",vid_name,path,tracker_name,50,falses(height,width),Array{Whisker1,1}(),
+    handles.wt=Tracker(path,"",vid_name,path,tracker_name,50,falses(height,width),falses(height,width),Array{Whisker1,1}(),
     (0.0,0.0),height,width,all_whiskers)
 
     #Update these paths
@@ -1048,11 +1048,29 @@ function draw_tracked_whisker(han::Tracker_Handles)
     w_x = han.tracked_w.whiskers_x[han.displayed_frame]
     w_y = han.tracked_w.whiskers_y[han.displayed_frame]
 
+    #Mask whisker
+    #mask index specifies where the whisker is clipped by the mask
+    mask_index = WhiskerTracking.mask_tracked_whisker(w_x,w_y,han.wt)
+
     if length(w_x) > 0
 
         #Draw Whisker
+
+        #Masked portion first
+
+        set_source_rgba(ctx,58/255,235/255,52/255,0.9)
+        set_line_width(ctx,0.5)
         move_to(ctx,w_x[1],w_y[1])
-        for i=2:length(w_x)
+        for i=2:mask_index
+            line_to(ctx,w_x[i],w_y[i])
+        end
+        stroke(ctx)
+
+        set_source_rgba(ctx,235/255,52/255,192/255,0.9)
+        set_line_width(ctx,0.5)
+        #Unmasked portion second
+        move_to(ctx,w_x[mask_index],w_y[mask_index])
+        for i=(mask_index+1):length(w_x)
             line_to(ctx,w_x[i],w_y[i])
         end
         stroke(ctx)
