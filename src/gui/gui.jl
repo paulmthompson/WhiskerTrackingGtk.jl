@@ -980,10 +980,10 @@ function trace_cb(han::Tracker_Handles)
 
         han.send_frame[:] = han.current_frame'
         if sharpen_mode(han.b)
-            han.send_frame = sharpen_image(han.send_frame,han.im_adj.sharpen_win,han.im_adj.sharpen_reps,han.im_adj.sharpen_filter)
+            han.send_frame = WhiskerTracking.sharpen_image(han.send_frame,han.im_adj.sharpen_win,han.im_adj.sharpen_reps,han.im_adj.sharpen_filter)
         end
-        adjust_contrast(han.send_frame,han.im_adj.contrast_min,han.im_adj.contrast_max)
-        han.wt.whiskers=WT_trace(han.frame,han.send_frame,han.wt.min_length,han.wt.pad_pos,han.wt.mask)
+        WhiskerTracking.adjust_contrast(han.send_frame,han.im_adj.contrast_min,han.im_adj.contrast_max)
+        han.wt.whiskers=WhiskerTracking.WT_trace(han.frame,han.send_frame,han.wt.min_length,han.wt.pad_pos,han.wt.mask)
 
         redraw_all(han)
 
@@ -1167,14 +1167,14 @@ function assign_woi(han::Tracker_Handles)
 
         han.tracked_w.whiskers_l[han.displayed_frame] = 1.0 # Manual assignment is a loss of zero
 
-        correct_follicle(han.tracked_w.whiskers_x[han.displayed_frame],han.tracked_w.whiskers_y[han.displayed_frame],han.tracked_w.whisker_pad...)
+        WhiskerTracking.correct_follicle(han.tracked_w.whiskers_x[han.displayed_frame],han.tracked_w.whiskers_y[han.displayed_frame],han.tracked_w.whisker_pad...)
 
         x = han.tracked_w.whiskers_x[han.displayed_frame]
         y = han.tracked_w.whiskers_y[han.displayed_frame]
 
         if get_gtk_property(han.b["contact_angle_check"],:active,Bool)
-            ii = calc_p_dist(x,y,han.tracked_w.pole_x[han.displayed_frame],han.tracked_w.pole_y[han.displayed_frame])[2]
-            han.tracked_w.contact_angle[han.displayed_frame] = get_theta_contact(x,y,ii,true)
+            ii = WhiskerTracking.calc_p_dist(x,y,han.tracked_w.pole_x[han.displayed_frame],han.tracked_w.pole_y[han.displayed_frame])[2]
+            han.tracked_w.contact_angle[han.displayed_frame] = WhiskerTracking.get_theta_contact(x,y,ii,true)
 
             update_normal_angle(han,han.displayed_frame)
         end
@@ -1185,7 +1185,7 @@ function assign_woi(han::Tracker_Handles)
         end
 
         if get_gtk_property(han.b["follicle_angle_check"],:active,Bool)
-            han.tracked_w.follicle_angle[han.displayed_frame] = get_angle(x,y,10.0,30.0)
+            han.tracked_w.follicle_angle[han.displayed_frame] = WhiskerTracking.get_angle(x,y,10.0,30.0)
         end
     end
 
