@@ -74,6 +74,9 @@ function combine_end(han,x,y)
     han.woi[han.displayed_frame].scores=new_scores
     han.woi[han.displayed_frame].len = length(new_thick)
 
+    push!(han.wt.whiskers,deepcopy(han.woi[han.displayed_frame]))
+    han.woi_id = length(han.wt.whiskers)
+
     han.combine_mode = 1
     redraw_all(han)
 

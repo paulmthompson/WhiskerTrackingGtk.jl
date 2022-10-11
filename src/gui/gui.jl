@@ -940,6 +940,7 @@ function whisker_select_cb(widget::Ptr,param_tuple,user_data::Tuple{Tracker_Hand
                 combine_start(han,m_x,m_y)
             else
                 combine_end(han,m_x,m_y)
+                assign_woi(han)
             end
         catch
             println("Could not combine whiskers")
@@ -1048,11 +1049,11 @@ function draw_tracked_whisker(han::Tracker_Handles)
     w_x = han.tracked_w.whiskers_x[han.displayed_frame]
     w_y = han.tracked_w.whiskers_y[han.displayed_frame]
 
-    #Mask whisker
-    #mask index specifies where the whisker is clipped by the mask
-    (mask_index,x_f,y_f,x_m,y_m) = WhiskerTracking.mask_tracked_whisker(w_x,w_y,han.wt)
-
     if length(w_x) > 0
+
+        #Mask whisker
+        #mask index specifies where the whisker is clipped by the mask
+        (mask_index,x_f,y_f,x_m,y_m) = WhiskerTracking.mask_tracked_whisker(w_x,w_y,han.wt)
 
         #Draw Whisker
 
@@ -1159,6 +1160,7 @@ end
 
 function assign_woi(han::Tracker_Handles)
 
+    #This causes a bug when we manually override but do not add whisker to whiskers matrix
     han.woi[han.displayed_frame] = deepcopy(han.wt.whiskers[han.woi_id])
 
     if get_gtk_property(han.b["tracked_whisker_toggle"],:active,Bool)

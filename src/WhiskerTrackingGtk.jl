@@ -5,7 +5,7 @@ module WhiskerTrackingGtk
 using Statistics,Random,Distributed,SharedArrays,DelimitedFiles,LinearAlgebra, Libdl, Dates
 
 using WhiskerTracking
-using Gtk.ShortNames, Cairo, FFMPEG, StackedHourglass
+using Gtk.ShortNames, Cairo, FFMPEG, StackedHourglass, Images
 import WhiskerTracking: Whisker1, Tracker, Tracked_Whisker, classifier, NeuralNetwork, Manual_Class
 
 include("gui/types.jl")
