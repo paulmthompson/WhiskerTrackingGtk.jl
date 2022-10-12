@@ -955,6 +955,7 @@ end
 function select_whisker_pad(han::Tracker_Handles,x,y)
 
     han.wt.pad_pos=(x,y)
+    han.tracked_w.whisker_pad = (x,y)
 
     redraw_all(han)
 end
