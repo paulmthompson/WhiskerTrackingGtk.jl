@@ -156,7 +156,7 @@ mutable struct Tracker_Handles
 
     show_contact::Bool
     tracked_contact::BitArray{1}
-    show_tracked_whisker::Bool
+    show_tracked_whisker::Int64
 
     show_event::Bool
     event_array::BitArray{1}

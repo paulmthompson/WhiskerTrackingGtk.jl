@@ -38,7 +38,7 @@ function make_gui()
     false,Dict{Int64,Bool}(),0,Whisker1(),false,
     wt,image_adjustment_settings(),zeros(Int64,0),1,
     c_widgets,Dict{Int64,Bool}(),Dict{Int64,Array{Float32,1}}(),zeros(UInt8,w,h),1,
-    Tracked_Whisker(0),false,false,falses(1),false,false,falses(1),".",
+    Tracked_Whisker(0),false,false,falses(1),0,false,falses(1),".",
     classifier(),Analog_Class(),Zoom_Class(),NeuralNetwork(),Manual_Class(),1,Array{Tuple{Float64,Float64},1}(),these_paths,zeros(UInt8,w,h),Draw_Area(w,h))
 end
 
@@ -1022,7 +1022,7 @@ function plot_whiskers(han::Tracker_Handles)
         end
     end
 
-    if han.show_tracked_whisker
+    if han.show_tracked_whisker > 0
         draw_tracked_whisker(han)
     end
 
@@ -1038,6 +1038,50 @@ function plot_whiskers(han::Tracker_Handles)
     reveal(han.c)
 
     nothing
+end
+
+function draw_tracked_whisker_line(ctx, x_f,y_f, x_m,y_m, w_x,w_y, mask_index)
+
+    #Masked portion first
+    set_source_rgba(ctx,58/255,235/255,52/255,0.9)
+    set_line_width(ctx,0.5)
+    move_to(ctx,x_f,y_f)
+    line_to(ctx,x_m,y_m)
+    stroke(ctx)
+
+    set_source_rgba(ctx,235/255,52/255,192/255,0.9)
+    set_line_width(ctx,0.5)
+
+    #Unmasked portion second
+    move_to(ctx,x_m,y_m)
+
+    for i=(mask_index):length(w_x)
+        line_to(ctx,w_x[i],w_y[i])
+    end
+    stroke(ctx)
+
+end
+
+function draw_tracked_whisker_circle(ctx, x_f,y_f, x_m,y_m, w_x,w_y, mask_index)
+
+    circ_rad = 2.0
+
+    #Masked portion first
+    new_path(ctx)
+    set_source_rgba(ctx,58/255,235/255,52/255,0.9)
+    arc(ctx, x_f, y_f, circ_rad, 0, 2*pi);
+    stroke(ctx);
+
+    arc(ctx, x_m, y_m, circ_rad, 0, 2*pi);
+    stroke(ctx);
+
+    set_source_rgba(ctx,235/255,52/255,192/255,0.9)
+
+    for i=(mask_index):length(w_x)
+        arc(ctx, w_x[i], w_y[i], circ_rad, 0, 2*pi)
+        stroke(ctx)
+    end
+
 end
 
 function draw_tracked_whisker(han::Tracker_Handles)
@@ -1058,23 +1102,13 @@ function draw_tracked_whisker(han::Tracker_Handles)
 
         #Draw Whisker
 
-        #Masked portion first
-
-        set_source_rgba(ctx,58/255,235/255,52/255,0.9)
-        set_line_width(ctx,0.5)
-        move_to(ctx,x_f,y_f)
-        line_to(ctx,x_m,y_m)
-        stroke(ctx)
-
-        set_source_rgba(ctx,235/255,52/255,192/255,0.9)
-        set_line_width(ctx,0.5)
-        #Unmasked portion second
-        move_to(ctx,x_m,y_m)
-        for i=(mask_index):length(w_x)
-            line_to(ctx,w_x[i],w_y[i])
+        if han.show_tracked_whisker == 1
+            draw_tracked_whisker_line(ctx, x_f,y_f, x_m,y_m, w_x,w_y, mask_index)
+        elseif han.show_tracked_whisker == 2
+            draw_tracked_whisker_circle(ctx, x_f,y_f, x_m,y_m, w_x,w_y, mask_index)
         end
-        stroke(ctx)
 
+        
         ip1 = han.tracked_w.ip_1[han.displayed_frame]
         ip2 = han.tracked_w.ip_2[han.displayed_frame]
 
@@ -1083,6 +1117,7 @@ function draw_tracked_whisker(han::Tracker_Handles)
 
         (x2,y2) = WhiskerTracking.get_parabola_fit(w_x,w_y,han.tracked_w.parabola_coeffs[:,han.displayed_frame],han.tracked_w.parabola_angle[han.displayed_frame])
 
+        #=
         set_source_rgba(ctx,58/255,235/255,52/255,0.9)
         set_line_width(ctx,0.5)
         move_to(ctx,x2[ip_1],y2[ip_1])
@@ -1090,6 +1125,7 @@ function draw_tracked_whisker(han::Tracker_Handles)
             line_to(ctx,x2[i],y2[i])
         end
         stroke(ctx)
+        =#
 
         myerror = sum((y2[ip_1:ip_2] .- w_y[ip_1:ip_2]).^2) / (ip_2 - ip_1)
         #curvs = [curvature(x2[i],han.tracked_w.parabola_coeffs[han.displayed_frame][1:2]...) for i=ip_1:ip_2]
