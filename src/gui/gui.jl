@@ -162,39 +162,6 @@ function load_video_cb(w::Ptr,user_data::Tuple{Tracker_Handles})
     nothing
 end
 
-#https://stackoverflow.com/questions/35414020/parse-input-to-rational-in-julia/35414995
-function myparse(xx)
-    ms,ns=split(xx,'/',keepempty=false)
-    m=parse(Int,ms)
-    n=parse(Int,ns)
-    m/n
-end
-
-function get_vid_dims(vid_name::String)
-    ww=@ffmpeg_env read(`$(FFMPEG.ffprobe) -v error -select_streams v:0 -show_entries stream=width -of default=nw=1:nk=1 $(vid_name)`)
-    hh=@ffmpeg_env read(`$(FFMPEG.ffprobe) -v error -select_streams v:0 -show_entries stream=height -of default=nw=1:nk=1 $(vid_name)`)
-    ff=@ffmpeg_env read(`$(FFMPEG.ffprobe) -v error -select_streams v -of default=noprint_wrappers=1:nokey=1 -show_entries stream=r_frame_rate $(vid_name)`)
-
-    width=0
-    height=0
-    fps=0
-    if Sys.iswindows()
-        width=parse(Int64,String(ww[1:(end-2)]))
-        height=parse(Int64,String(hh[1:(end-2)]))
-        fps=myparse(String(ff[1:(end-2)]))
-    else
-        width=parse(Int64,String(ww[1:(end-1)]))
-        height=parse(Int64,String(hh[1:(end-1)]))
-        fps = myparse(String(ff[1:(end-1)]))
-    end
-
-    println("width = ", width)
-    println("height = ", height)
-    println("fps = ", fps)
-
-    (width,height,fps)
-end
-
 function resize_for_video(han::Tracker_Handles,w,h,fps)
 
     han.wt.h = h
@@ -222,7 +189,7 @@ function load_video_to_gui(path::String,vid_title::String,handles::Tracker_Handl
     vid_name = string(path,vid_title)
 
     #load first frame
-    (width,height,fps)=get_vid_dims(vid_name)
+    (width,height,fps)=WhiskerTracking.get_vid_dims(vid_name)
     resize_for_video(handles,width,height,fps)
     temp=zeros(UInt8,width,height)
     frame_time = 1  /  fps #Number of frames in a second of video
@@ -231,7 +198,7 @@ function load_video_to_gui(path::String,vid_title::String,handles::Tracker_Handl
     catch
     end
 
-    handles.max_frames = get_max_frames(vid_name)
+    handles.max_frames = WhiskerTracking.get_max_frames(vid_name)
 
     handles.man=Manual_Class(handles.max_frames)
 
@@ -263,18 +230,6 @@ function load_video_to_gui(path::String,vid_title::String,handles::Tracker_Handl
     redraw_all(handles)
 
     nothing
-end
-
-function get_max_frames(vid_name::String)
-
-    yy=@ffmpeg_env read(`$(FFMPEG.ffprobe) -v error -select_streams v:0 -show_entries stream=nb_frames -of default=nokey=1:noprint_wrappers=1 $(vid_name)`)
-    if Sys.iswindows()
-        max_frames=parse(Int64,String(yy[1:(end-2)]))
-    else
-        max_frames=parse(Int64,String(yy[1:(end-1)]))
-    end
-
-    max_frames
 end
 
 #=
@@ -1064,10 +1019,11 @@ end
 
 function draw_tracked_whisker_circle(ctx, x_f,y_f, x_m,y_m, w_x,w_y, mask_index)
 
-    circ_rad = 2.0
+    circ_rad = 0.5
 
     #Masked portion first
-    new_path(ctx)
+    new_path(ctx) #Prevents linking text box to first circle 
+    #https://stackoverflow.com/questions/66820155/how-to-prevent-an-extra-line-to-be-drawn-between-text-and-shape
     set_source_rgba(ctx,58/255,235/255,52/255,0.9)
     arc(ctx, x_f, y_f, circ_rad, 0, 2*pi);
     stroke(ctx);

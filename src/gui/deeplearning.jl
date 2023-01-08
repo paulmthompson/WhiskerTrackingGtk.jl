@@ -335,7 +335,7 @@ end
 
 function set_up_training(han,nn,vid_name,max_frames,woi,pad_pos,frame_list,get_mean=false)
 
-    (w,h,fps)=get_vid_dims(vid_name)
+    (w,h,fps)=WhiskerTracking.get_vid_dims(vid_name)
 
     #=
     if get_mean
