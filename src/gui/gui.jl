@@ -1087,16 +1087,47 @@ function draw_tracked_whisker(han::Tracker_Handles)
         arc(ctx, ip2_x,ip2_y,0.5, 0, 2*pi);
         stroke(ctx)
 
+        set_source_rgb(ctx,0,0,1)
+        px = han.tracked_w.pole_x[han.displayed_frame]
+        py = han.tracked_w.pole_y[han.displayed_frame]
+        arc(ctx, px, py, 5, 0, 2*pi);
+        stroke(ctx)
+
         if han.man.contact[han.displayed_frame] == 2
 
             set_source_rgb(ctx,0,0,1)
-            px = han.tracked_w.pole_x[han.displayed_frame]
-            py = han.tracked_w.pole_y[han.displayed_frame]
-
-            (w_px,w_py) = WhiskerTracking.find_nearest_on_whisker(w_x,w_y,px,py)
+            
+            (w_px,w_py,w_i) = WhiskerTracking.find_nearest_on_whisker(w_x,w_y,px,py)
 
             arc(ctx, w_px, w_py, 5, 0, 2*pi);
             stroke(ctx)
+
+            if han.draw_mechanics
+
+                (contact_angle,c_x,c_y) = WhiskerTracking.find_incident_angle(w_x,w_y,w_i,5)
+                #a
+                draw_arrow(ctx,w_px,w_py,30.0,contact_angle,(1,1,1))
+
+                normal_angle = contact_angle 
+
+                if han.man.pro_re_block[han.displayed_frame] == 2 #retraction 
+                    normal_angle = normal_angle + pi/2
+                else #protraction 
+                    normal_angle = normal_angle - pi/2
+                end
+    
+                draw_arrow(ctx,w_px,w_py,30.0,normal_angle,(1,1,1))
+    
+                #=
+                set_source_rgb(ctx,0,0,1)
+                x = han.tracked_w.follicle_x[han.displayed_frame]
+                y = han.tracked_w.follicle_y[han.displayed_frame]
+                arc(ctx, x,y, 5, 0, 2*pi);
+                stroke(ctx)
+    
+                draw_arrow(ctx,x,y,30.0,han.tracked_w.follicle_angle[han.displayed_frame],(1,1,1))
+                =#
+            end
         end
 
         #(x2,y2) = WhiskerTracking.get_parabola_fit(w_x,w_y,han.tracked_w.parabola_coeffs[:,han.displayed_frame],han.tracked_w.parabola_angle[han.displayed_frame])
@@ -1105,27 +1136,7 @@ function draw_tracked_whisker(han::Tracker_Handles)
         #curvs = [curvature(x2[i],han.tracked_w.parabola_coeffs[han.displayed_frame][1:2]...) for i=ip_1:ip_2]
 
         #set_gtk_property!(han.b["parabola_error_label"],:label,string(round(myerror,digits=3)))
-
-        if han.draw_mechanics
-            set_source_rgb(ctx,0,0,1)
-            x = han.tracked_w.pole_x[han.displayed_frame]
-            y = han.tracked_w.pole_y[han.displayed_frame]
-            arc(ctx, x,y, 5, 0, 2*pi);
-            stroke(ctx)
-
-            #a
-            draw_arrow(ctx,x,y,30.0,han.tracked_w.contact_angle[han.displayed_frame],(1,1,1))
-
-            draw_arrow(ctx,x,y,30.0,han.tracked_w.normal_angle[han.displayed_frame],(1,1,1))
-
-            set_source_rgb(ctx,0,0,1)
-            x = han.tracked_w.follicle_x[han.displayed_frame]
-            y = han.tracked_w.follicle_y[han.displayed_frame]
-            arc(ctx, x,y, 5, 0, 2*pi);
-            stroke(ctx)
-
-            draw_arrow(ctx,x,y,30.0,han.tracked_w.follicle_angle[han.displayed_frame],(1,1,1))
-        end
+        
     end
 end
 
