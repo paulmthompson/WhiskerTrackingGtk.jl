@@ -1077,11 +1077,14 @@ function draw_tracked_whisker(han::Tracker_Handles)
 
         set_source_rgba(ctx,58/255,235/255,52/255,0.9)
         set_line_width(ctx,0.5)
-        move_to(ctx,ip1_x,ip1_y)
+        new_path(ctx) #Prevents linking text box to first circle 
+        arc(ctx, ip1_x, ip1_y,0.5, 0, 2*pi);
+        stroke(ctx)
         for i=ip1_i:(ip2_i-1)
-            line_to(ctx,w_x[i],w_y[i])
+            arc(ctx, w_x[i],w_y[i],0.5, 0, 2*pi);
+            stroke(ctx)
         end
-        line_to(ctx,ip2_x,ip2_y)
+        arc(ctx, ip2_x,ip2_y,0.5, 0, 2*pi);
         stroke(ctx)
 
         #(x2,y2) = WhiskerTracking.get_parabola_fit(w_x,w_y,han.tracked_w.parabola_coeffs[:,han.displayed_frame],han.tracked_w.parabola_angle[han.displayed_frame])
