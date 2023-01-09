@@ -1087,6 +1087,18 @@ function draw_tracked_whisker(han::Tracker_Handles)
         arc(ctx, ip2_x,ip2_y,0.5, 0, 2*pi);
         stroke(ctx)
 
+        if han.man.contact[han.displayed_frame] == 2
+
+            set_source_rgb(ctx,0,0,1)
+            px = han.tracked_w.pole_x[han.displayed_frame]
+            py = han.tracked_w.pole_y[han.displayed_frame]
+
+            (w_px,w_py) = WhiskerTracking.find_nearest_on_whisker(w_x,w_y,px,py)
+
+            arc(ctx, w_px, w_py, 5, 0, 2*pi);
+            stroke(ctx)
+        end
+
         #(x2,y2) = WhiskerTracking.get_parabola_fit(w_x,w_y,han.tracked_w.parabola_coeffs[:,han.displayed_frame],han.tracked_w.parabola_angle[han.displayed_frame])
         
         #myerror = sum((y2[ip_1:ip_2] .- w_y[ip_1:ip_2]).^2) / (ip_2 - ip_1)
