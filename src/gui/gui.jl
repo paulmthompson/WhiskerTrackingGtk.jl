@@ -1054,8 +1054,11 @@ function draw_tracked_whisker(han::Tracker_Handles)
 
         #Mask whisker
         #mask index specifies where the whisker is clipped by the mask
+        #An accurate representation of our whisker is now effectively (x_f,y_f), (x_m, y_m), followed by
+        # (w_x[mask_index],w_y[mask_index]) , (w_x[mask_index+1],w_y[mask_index+1]) .. etc
         (mask_index,x_f,y_f,x_m,y_m) = WhiskerTracking.mask_tracked_whisker(w_x,w_y,han.wt)
 
+        d = sqrt((x_m - x_f)^2 + (y_m - y_f)^2) + sqrt((w_x[mask_index] - x_m)^2 + (w_y[mask_index] - y_m )^2 )
         #Draw Whisker
 
         if han.show_tracked_whisker == 1
@@ -1064,29 +1067,29 @@ function draw_tracked_whisker(han::Tracker_Handles)
             draw_tracked_whisker_circle(ctx, x_f,y_f, x_m,y_m, w_x,w_y, mask_index)
         end
 
-        
+        #Loads the desired coordinates for high SNR segment 
+        #With ip1 being proximal extent and ip2 being distal
         ip1 = han.tracked_w.ip_1[han.displayed_frame]
         ip2 = han.tracked_w.ip_2[han.displayed_frame]
 
-        ip_1 = WhiskerTracking.get_ind_at_dist(w_x,w_y,ip1)
-        ip_2 = WhiskerTracking.get_ind_at_dist(w_x,w_y,ip2)
+        (ip1_x,ip1_y, ip1_i) = WhiskerTracking.get_ind_at_dist_exact(w_x,w_y,ip1,s0 = d, start_ind = mask_index + 1)
+        (ip2_x,ip2_y, ip2_i) = WhiskerTracking.get_ind_at_dist_exact(w_x,w_y,ip2,s0 = d, start_ind = mask_index + 1)
 
-        (x2,y2) = WhiskerTracking.get_parabola_fit(w_x,w_y,han.tracked_w.parabola_coeffs[:,han.displayed_frame],han.tracked_w.parabola_angle[han.displayed_frame])
-
-        #=
         set_source_rgba(ctx,58/255,235/255,52/255,0.9)
         set_line_width(ctx,0.5)
-        move_to(ctx,x2[ip_1],y2[ip_1])
-        for i=(ip_1+1):ip_2
-            line_to(ctx,x2[i],y2[i])
+        move_to(ctx,ip1_x,ip1_y)
+        for i=ip1_i:(ip2_i-1)
+            line_to(ctx,w_x[i],w_y[i])
         end
+        line_to(ctx,ip2_x,ip2_y)
         stroke(ctx)
-        =#
 
-        myerror = sum((y2[ip_1:ip_2] .- w_y[ip_1:ip_2]).^2) / (ip_2 - ip_1)
+        #(x2,y2) = WhiskerTracking.get_parabola_fit(w_x,w_y,han.tracked_w.parabola_coeffs[:,han.displayed_frame],han.tracked_w.parabola_angle[han.displayed_frame])
+        
+        #myerror = sum((y2[ip_1:ip_2] .- w_y[ip_1:ip_2]).^2) / (ip_2 - ip_1)
         #curvs = [curvature(x2[i],han.tracked_w.parabola_coeffs[han.displayed_frame][1:2]...) for i=ip_1:ip_2]
 
-        set_gtk_property!(han.b["parabola_error_label"],:label,string(round(myerror,digits=3)))
+        #set_gtk_property!(han.b["parabola_error_label"],:label,string(round(myerror,digits=3)))
 
         if han.draw_mechanics
             set_source_rgb(ctx,0,0,1)

@@ -19,6 +19,8 @@ function add_contact_mark_callbacks(b,handles)
     signal_connect(follicle_location_cb,b["follicle_location_toggle"],"toggled",Nothing,(),false,(handles,))
     signal_connect(follicle_angle_cb,b["follicle_angle_button"],"toggled",Nothing,(),false,(handles,))
 
+    
+
     nothing
 end
 
