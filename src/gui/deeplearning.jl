@@ -208,15 +208,12 @@ end
 function draw_prediction2(han::Tracker_Handles,hg::StackedHourglass.NN,conf)
 
     colors=((1,0,0),(0,1,0),(0,1,1),(1,0,1))
-    atype = []
-    if CUDA.has_cuda_gpu()
-        atype = KnetArray
-    else
-        atype = Array
-    end
-    pred = calculate_whisker_predictions(han,hg,atype)
+
+    output = han.current_frame ./ 255
+    
+    pred = WhiskerTracking.calculate_whisker_predictions(output,hg,han.nn.flip_x,han.nn.flip_y)
     for i = 1:size(pred,3)
-        (x,y) = calculate_whisker_fit(pred[:,:,i,1],han.current_frame)
+        (x,y) = WhiskerTracking.calculate_whisker_fit(pred[:,:,i,1],han.current_frame)
         draw_points_2(han,y,x,colors[i])
 
         if (han.show_contact) & (i == han.class.w_id)
@@ -237,28 +234,6 @@ function draw_points_2(han::Tracker_Handles,x::Array{T,1},y::Array{T,1},cc) wher
         arc(ctx, x[i],y[i], 1.0, 0, 2*pi);
         stroke(ctx);
     end
-end
-
-function calculate_whisker_predictions(han::Tracker_Handles,hg::StackedHourglass.NN,atype=KnetArray)
-
-    output = han.current_frame ./ 255
-
-    if han.nn.flip_x
-        reverse!(output,dims=1)
-    end
-    if han.nn.flip_y
-        reverse!(output,dims=2)
-    end
-
-    pred=StackedHourglass.predict_single_frame(hg,output,atype)
-
-    if han.nn.flip_x
-        reverse!(pred,dims=1)
-    end
-    if han.nn.flip_y
-        reverse!(pred,dims=2)
-    end
-    pred
 end
 
 get_draw_predictions(b::Gtk.GtkBuilder)=get_gtk_property(b["dl_show_predictions"],:active,Bool)
