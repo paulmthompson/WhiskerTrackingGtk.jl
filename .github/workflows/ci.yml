@@ -45,7 +45,7 @@ jobs:
             ${{ runner.os }}-
       - name: Install WhiskerTracking.jl on Windows
         if: runner.os == 'Windows'
-        run: julia -e 'using Pkg; Pkg.add(url="https://github.com/paulmthompson/WhiskerTracking.jl")'
+        run: julia -e 'using Pkg; Pkg.add(url=\"https://github.com/paulmthompson/WhiskerTracking.jl\")'
       - name: Install WhiskerTracking.jl on Linux
         if: runner.os == 'Linux'
         run: julia -e "using Pkg; Pkg.add(url=\"https://github.com/paulmthompson/WhiskerTracking.jl\")"
