@@ -1,10 +1,17 @@
 
-export make_gui
+export make_gui, gui
 
 if Sys.iswindows()
     const glade_path = string(dirname(Base.source_path()),"\\whiskertracking.glade")
 else
     const glade_path = string(dirname(Base.source_path()),"/whiskertracking.glade")
+end
+
+function gui()
+    han = make_gui()
+
+    han = make_gui();
+    add_callbacks(han.b,han)
 end
 
 function make_gui()
