@@ -44,5 +44,13 @@ jobs:
             ${{ runner.os }}-test-
             ${{ runner.os }}-
       - name: Install WhiskerTracking.jl
-        run: julia -e "using Pkg; Pkg.add(url=\"https://github.com/paulmthompson/WhiskerTracking.jl\")"
+        run: |
+             if ["$RUNNER_OS" == "Linux"]; then
+                julia -e "using Pkg; Pkg.add(url=\"https://github.com/paulmthompson/WhiskerTracking.jl\")"
+             elif ["$RUNNER_OS" == "Windows"]; then
+                julia -e 'using Pkg; Pkg.add(url="https://github.com/paulmthompson/WhiskerTracking.jl")'
+             else
+                echo "$RUNNER_OS not supported"
+                exit 1
+              fi
       - uses: julia-actions/julia-buildpkg@latest
