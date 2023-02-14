@@ -1,4 +1,4 @@
-name = "WhiskerTrackingGtk.jl"
+name = "WhiskerTrackingGtk"
 uuid = "a5892df0-3f39-11ed-1a7e-43a2532b2fa8"
 version = "0.0.1"
 author = ["Paul Thompson"]
