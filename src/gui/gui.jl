@@ -12,6 +12,8 @@ function gui()
 
     han = make_gui();
     add_callbacks(han.b,han)
+
+    return han
 end
 
 function make_gui()
